@@ -36,3 +36,5 @@ There are several ways to install and use Git. Below I list some methods.
     b. See using VS Code with Git [here](https://code.visualstudio.com/docs/editor/versioncontrol)
 
 5. Once you're up and using Git, I'd recommend looking over this [tutorial video](https://git-scm.com/video/what-is-git) and this [cheat sheet](https://github.github.com/training-kit/downloads/github-git-cheat-sheet.pdf) - in fact, those may be useful to look at initially. There is also [this "visual" cheat sheet](https://ndpsoftware.com/git-cheatsheet.html). Last but not least, [the documentation](https://git-scm.com/docs) may prove helpful for in depth explanations
+
+- Test
