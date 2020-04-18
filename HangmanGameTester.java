@@ -8,6 +8,9 @@ public class HangmanGameTester
         String[] testingWordList = {"class", "doge", "computer"};
         
         HangmanGame game = new HangmanGame(testingWordList);
+
         game.playGame();
+
+
     }
 }
