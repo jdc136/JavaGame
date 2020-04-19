@@ -1,33 +1,29 @@
 /**
  * A program to play a game of Hangman.
+ * @author Jared Collier, Allison Roldan
+ * @version 0.1
  */
 
 import java.util.*;
 
 public class HangmanGame {
 
-    // Instance variables
-    private int numberOfLives = 6;
-    private String wordSelected;
-    private char[] wordToGuess = wordSelected.toCharArray(); // An array to hold the letters of wordToGuess variable
-    private char letterGuessed;
-    private char[] lettersGuessed;
-    private char[] wordSoFar = wordSelected.toCharArray();
-        //Arrays.fill(wordSoFar, '_'); // do something like this
+    // Class Variables (instance variables)
 
-    private int lettersLeft; // counts the underscores in the word so far // if = 0 then player has won the game
-
-
+    // Related to WordFile array
+    // See WordFile instance variables // may need getters/setters for some of those values
     
-
-    /**
-     * Break out the letters of the select word and put into the array wordLetters ?
-     */
-
-
-     
-
-
+    // General game play
+    private int playerLives = 6; // Max errors before user loses game
+    
+    // Variables related to the words from WordFile
+    private ArrayList<String> usedWords; // saves a copy of the words that had been used in previous rounds
+    private char[] wordToGuess; // Word that user needs to guess // converted to char[] by toCharArray() from wordSelected variable above
+    
+    // Variables related to game play on the wordToGuess
+    private char[] wordSoFar; // The word so far as it is updated by correct user guesses
+    private int lettersLeft; // Counts the underscores left in wordSoFar // if = 0, and playerlives != 0, player has won
+    private char[] lettersGuessed; // The letters the user has guessed so far, from previous turns
 
     /**
      * Creates a new HangmanGame object with a default word list.
@@ -35,6 +31,7 @@ public class HangmanGame {
     public HangmanGame() {
         // TODO: FILL ME IN!
 
+        // This constructor will need to fetch the list of possible words to guess from a new WordFile object
 
     }
 
@@ -45,6 +42,10 @@ public class HangmanGame {
      */
     public HangmanGame(String[] wordList) {
         // TODO: FILL ME IN!
+
+        // This constructor will provide the list of words for all games played.
+        // It should be used for testing and grading. A smaller word list will make it easy to see if your program is working
+
     }
 
     /**
@@ -55,83 +56,136 @@ public class HangmanGame {
      */
     public void playGame() {
         // TODO: FILL ME IN!
+        char letterGuessed; // The letter guessed by a user on a given turn
 
-        /* Need a loop that shows the user the word so far and then prompts them for a guess
-        // a do while loop?
-
-        // first read their guess using Scanner with nextLine()
-        // Convert their response into a character by using the charAt() to get the first character
-
-        // Second, check if the guessed letter is in the word-to-guess
-        // If so, replace that letter in the word-so-far
-        // If not, tell user they got a letter wrong and lose a life
-
-        // Third check whether theya re out of lives or if they have
-        // guessed all the letters - then they win
-
-        // Ask the user to play again once the game loop is finished
-        // this allows the PlayGame method to repeat multiple times
-
-        */ // end of loop
-
-        
+        // See pseudocode for description of algorithm here
 
         // do not call the method playGame() again from inside itself
 
-
-    }
-
-    private void resetGame() {
-        // TODO
-
-        // pick a random word from the list by selecting a random index from the Array created from the word file
-
-        // Reset wordSoFar, lettersGuessed, numberOfLives
     }
 
 
     /**
-     * 
+     * Assigns new game values to the instance variables. Utilizes local variables to assist in this.
+     */
+    private void resetGame() {
+      // TODO
+
+      int wordFileArraySize; // Variable that keeps track of the size of the array (array.length - 1) // may need to set up a getter for this
+      Random rand = new Random(); // generates random whole number in the range of the size of the wordFile array to grab an index
+      int index; // Randomly generated number in the range of the word list array length
+      String wordSelected; // Word selected from WordFile
+
+      /* Assigns new game values to the instance variables:
+      * Randomly select an index from the WordFile list and the word at that index becomes wordToGuess by a wordSelected.toCharArray() method
+      * wordSoFar variable is filled with underscores '_', something like Arrays.fill() method
+      * playerLives is reset to 6
+      * lettersLeft is set to the count of underscores for the new word
+      * lettersGuessed[] is emptied
+      */
+
+    }
+
+    /**
+     * This method converts the wordSoFar char[] array to a string to print back to the user
      * @param word
-     * @return a string of the char[] array
+     * @return wordSoFarOutput
      */
       private String charToString (char[] word) {
-        String wordSoFarOutput; 
-        
-        // TODO: figure out a way to get the characters from wordSoFar into this variable (probably a for loop)
+        // TODO
+
+        String wordSoFarOutput; // variable that is returned to PlayGame() indicating the wordSoFar
+
+        /* For loop:
+        * Go through the entries in the array and add each letter to end of a string (the wordSoFarOutput)
+        */
 
         return wordSoFarOutput;
 
       }
 
       /**
-       * 
+       * Method returns a boolean stating whether the letterGuessed is in the wordToGuess array
        * @param word
-       * @return 
-       * This method could return both a) the fact that the letter is there (or not) as well as
-       * b) the index of that letter in the char[] array
-       * e.g. private int charSearch (char[] word) {a) look for the characters b) return the index(es) of that letter}
+       * @return charInWord
+       * 
        */
-      private boolean charSearch (char[] word) {
-        boolean charInWord;
+      private boolean containsLetters (char[] word) {
         
-        // Use a for loop to go through each char of the char[] and see if that character equals
-        // the letterGuessed variable
-        // there may be multiple times the letter occurs and you want to keep track of all of those instances
-        
-        // potentially we'll also want to keep track of the indexes of those characters in this method too
+        boolean charInWord = false;
+
+        /* Uses a for loop to go through each char of the wordToGuess char[] and see if letterGuesed character equals
+        * any of them. Uses a linear search method.
+        * There may be multiple instances the letter occurs. More an issue for the method below.
+        */
+
+        return charInWord;
 
       }
 
-      private char[] replaceChar (char[] word) {
+      /**
+       * Method returns the wordSoFar with updates from letterGuessed (if containsLetters returns true)
+       * @param word
+       * @return 
+       */
+      private char[] replaceLetters (char[] word) {
         
-        //wordSoFar = something or the other
+        char[] wordSoFarUpdated;
 
-        // Note that you can do this with a single loop, but you'll need to consider both the word-so-far 
-        // (to see if there is an '_' to replace) and the word-to-guess (to see if the '_' is one that should be replaced).
+        /* When user correctly finds a letter, this method considers both wordToGuess and wordSoFar.
+        * Replace each underscore '_' in wordSoFar with guessed letter only if the letter in wordToGuess at the index of the '_'
+        * is the one you're trying to replace.
+        * In other words, you'll need to consider whether there is an '_' in wordSoFar to replace and if the '_' in wordToGuess is 
+        * the one that should be replaced.
+        */
 
-        return wordSoFar;
+        return wordSoFarUpdated;
 
+      }
+
+      /**
+       * This method counts the '_' in wordSoFar to evaluate whether the player has won or not
+       * @param word
+       * @return lettersLeft
+       */
+      private int countLetters(char[] word) {
+
+        int lettersLeft;
+
+        return lettersLeft;
+
+      }
+
+      /**
+       * This method asks the player to guess again
+       */
+      private void askForGuess() {
+
+        System.out.println("Guess a letter: ");
+
+      }
+
+      /**
+       * This method displays a "you won" message and asks the player if they would like to play again
+       */
+      private boolean askToPlayAgain() {
+        
+        boolean playAgain = true;
+        char yayNay;
+
+        System.out.println("You won!");
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Would you like to play again? Y/N: ");
+        yayNay = input.nextLine().charAt(0);
+
+        if (yayNay == 'y' || yayNay == 'Y') {
+          playAgain = true;
+        } else {
+          playAgain = false;
+        }
+
+        return playAgain;
       }
 
 

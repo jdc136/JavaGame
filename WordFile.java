@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  * @version 2020
  */
 public class WordFile {
-    private ArrayList<String> list;
+    private ArrayList<String> list; // This is the array of strings from the file; decrements by one each round
 
     /**
      * Creates a new word file from the default file ("words1500.txt");
