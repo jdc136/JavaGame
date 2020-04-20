@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
  */
 public class WordFile {
     private ArrayList<String> list; // This is the array of strings from the file; decrements by one each round
+                                    // Not sure if this needs to correlate to a instance variable in HangmanGame class
 
     /**
      * Creates a new word file from the default file ("words1500.txt");
