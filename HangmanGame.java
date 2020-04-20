@@ -43,14 +43,14 @@ public class HangmanGame {
   public HangmanGame() {
     // TODO: FILL ME IN!
 
-
-    // I think this is all you need to do here (but my usb was having issues so it was difficult to check)
+    // I think this is all you need to do here (but my usb was having issues so it
+    // was difficult to check)
     ArrayList<String> wordList;
 
     WordFile words = new WordFile();
 
     wordList = words.getWordArrayList();
-    
+
     // This constructor will need to fetch the list of possible words to guess from
     // a new WordFile object
 
@@ -87,7 +87,7 @@ public class HangmanGame {
     
 
     // DEBUG
-    // This line merely demonstrates how to get a given list
+    // This line merely demonstrates how to get a given list (works when variable is class member but don't know how to figure it out when it's local to HangmanGame constructor)
     
     
     for (int i = 0; i < .length; i++) {
