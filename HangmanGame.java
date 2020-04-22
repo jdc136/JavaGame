@@ -104,18 +104,31 @@ public class HangmanGame {
 
       System.out.println();
 
-      charToStringOutput = this.charToString(wordSoFar);
+      charToStringOutput = this.charToString(this.wordSoFar);
       System.out.print(charToStringOutput);
 
       while (this.playerLives > 0) {
         // In here is where some of the round-to-round logic can go
-        System.out.printf("The word is: %s",charToStringOutput);
-        char ch = input.next().charAt(0);
+        System.out.printf("The word is: %s\n",charToStringOutput);
+        this.askForGuess();
 
         // here is where you would search for that letter
+        // in the char array (method: containsLetters)
 
-        // eventually you would do an if-statement to determine whether
-        // this.playerLives stays the same or decrements
+        // Then you would need to be able to replace it the underscores
+        // with that letter if user was correct, and leave it if incorrect
+        // You'd also need to decrement a life if incorrect
+        // Use method replaceLetters
+
+        // Finally, you'd have a condition to indicate that if 
+        // the user guessed all the letters, and they had more than 0 lives
+        // they win!
+
+
+        // For development:
+        System.out.println("Enter 0 to escape: ");
+        int lives = input.nextInt();
+        this.playerLives = lives;
 
       }
 
@@ -128,6 +141,7 @@ public class HangmanGame {
 
     // See pseudocode for description of algorithm here
     // do not call the method playGame() again from inside itself
+
 
   }
 
@@ -259,8 +273,11 @@ public class HangmanGame {
    * This method asks the player to guess again
    */
   private void askForGuess() {
+    String charToStringOutput;
+    Scanner input = new Scanner(System.in);
 
-    System.out.println("Guess a letter: ");
+    System.out.print("Guess a letter: ");
+    char ch = input.next().charAt(0);
 
   }
 
