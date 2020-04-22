@@ -13,3 +13,7 @@ Project: Java Game - Hangman
 - planned to revisit tomorrow, Sunday April 19th
 
 ## Sunday, April 19th
+- Discussed next steps and outlined pebbles a bit mroe
+- Looked at the Agile board together on GitHub
+- Jared followed up by saying he would work on getting the initial connection (constructor initialization) set up and then look to get a randomized word selected
+- Allison's specific method tasks to follow shortly thereafter
