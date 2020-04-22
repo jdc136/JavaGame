@@ -22,6 +22,7 @@ public class HangmanGame {
   private char[] wordToGuess; // Word that user needs to guess // converted to char[] by toCharArray() from
                               // the randomly selected word
   private char[] wordSoFar; // The word so far as it is updated by correct user guesses
+  private Random rand = new Random();
 
   // Variables that Jared is NOT certain should be instance variables
   private char[] lettersGuessed; // The letters the user has guessed so far, from previous turns
@@ -30,6 +31,7 @@ public class HangmanGame {
   private ArrayList<String> usedWords; // saves a copy of the words that had been used in previous rounds of a given
                                        // instance. This may be simply correlated to the "list" variable in our
                                        // WordFile class.
+  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
 
   /*
    * PUBLIC METHODS These are the methods you can access in OTHER clases (i.e. our
@@ -45,14 +47,10 @@ public class HangmanGame {
 
     // I think this is all you need to do here (but my usb was having issues so it
     // was difficult to check)
-    ArrayList<String> wordList;
 
-    WordFile words = new WordFile();
-
-    wordList = words.getWordArrayList();
-
-    // This constructor will need to fetch the list of possible words to guess from
-    // a new WordFile object
+    // Sets value of instance variable wordList2 to the Word File!
+    wordList = new WordFile().getWordArrayList();
+    this.resetGame();
 
   }
 
@@ -61,11 +59,10 @@ public class HangmanGame {
    * 
    * @param wordList The list of words that the game chooses from.
    */
-  public HangmanGame(String[] wordList) {
+  public HangmanGame(ArrayList<String> wordList) {
 
-    String[] wordList2;
-
-    wordList2 = wordList;
+    rand = new Random();
+    this.wordList = wordList;
 
     // This constructor will provide the list of words for all games played.
     // It should be used for testing and grading. A smaller word list will make it
@@ -82,20 +79,54 @@ public class HangmanGame {
   public void playGame() {
     // TODO: FILL ME IN!
     char letterGuessed; // The letter guessed by a user on a given turn
-    String[] wordList;
-
-    
+    String charToStringOutput;
+    Scanner input = new Scanner(System.in);
 
     // DEBUG
-    // This line merely demonstrates how to get a given list (works when variable is class member but don't know how to figure it out when it's local to HangmanGame constructor)
-    
-    
-    for (int i = 0; i < .length; i++) {
-      System.out.println([i].toString());
-    }
+    // for (int i = 0; i < this.wordList.length; i++) {
+    // System.out.println(this.wordList[i].toString());
+    // }
+    do {
+      this.wordToGuess = this.pickWord().toCharArray();
+      System.out.println(this.wordToGuess);
+
+      for (int i = 0; i < this.wordToGuess.length; i++) {
+        System.out.print(this.wordToGuess[i] + " ");
+      }
+
+      System.out.println();
+
+      this.wordSoFar = this.wordToGuess.clone();
+      Arrays.fill(wordSoFar, '_');
+      for (int i = 0; i < this.wordSoFar.length; i++) {
+        System.out.print(this.wordSoFar[i] + " ");
+      }
+
+      System.out.println();
+
+      charToStringOutput = this.charToString(wordSoFar);
+      System.out.print(charToStringOutput);
+
+      while (this.playerLives > 0) {
+        // In here is where some of the round-to-round logic can go
+        System.out.printf("The word is: %s",charToStringOutput);
+        char ch = input.next().charAt(0);
+
+        // here is where you would search for that letter
+
+        // eventually you would do an if-statement to determine whether
+        // this.playerLives stays the same or decrements
+
+      }
+
+    } while (this.askToPlayAgain() == true);
+
+    // This prints the array list from the words coming out of the file
+    // for (int i = 0; i < this.wordList2.size(); i++) {
+    // System.out.println(this.wordList2.get(i).toString());
+    // }
 
     // See pseudocode for description of algorithm here
-
     // do not call the method playGame() again from inside itself
 
   }
@@ -117,7 +148,7 @@ public class HangmanGame {
                            // need to set up a getter for this
     Random rand = new Random(); // generates random whole number in the range of the size of the wordFile array
                                 // to grab an index
-    int index; // Randomly generated number in the range of the word list array length
+    int randomIndex; // Randomly generated number in the range of the word list array length
     String wordSelected; // Word selected from WordFile
 
     /*
@@ -128,6 +159,18 @@ public class HangmanGame {
      * 6 lettersLeft is set to the count of underscores for the new word
      * lettersGuessed[] is emptied
      */
+
+  }
+
+  /**
+   * This method generates a random word selected from the given array/arraylist
+   */
+  private String pickWord() {
+
+    int randomInd = rand.nextInt(this.wordList.size());
+    String pickedWord = this.wordList.get(randomInd);
+
+    return pickedWord;
 
   }
 
@@ -143,10 +186,8 @@ public class HangmanGame {
 
     String wordSoFarOutput; // variable that is returned to PlayGame() indicating the wordSoFar
 
-    /*
-     * For loop: Go through the entries in the array and add each letter to end of a
-     * string (the wordSoFarOutput)
-     */
+    wordSoFarOutput = new String(word).replace("", " ").trim();
+    //wordSoFarOutput.replace(".(?=.)", "$0 ").trim();
 
     return wordSoFarOutput;
 
@@ -232,7 +273,7 @@ public class HangmanGame {
     boolean playAgain = true;
     char yayNay;
 
-    System.out.println("You won!");
+    System.out.println("\nYou won!");
 
     Scanner input = new Scanner(System.in);
     System.out.println("Would you like to play again? Y/N: ");
