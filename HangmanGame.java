@@ -23,6 +23,7 @@ public class HangmanGame {
                               // the randomly selected word
   private char[] wordSoFar; // The word so far as it is updated by correct user guesses
   private Random rand = new Random();
+  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
 
   // Variables that Jared is NOT certain should be instance variables
   private char[] lettersGuessed; // The letters the user has guessed so far, from previous turns
@@ -31,7 +32,7 @@ public class HangmanGame {
   private ArrayList<String> usedWords; // saves a copy of the words that had been used in previous rounds of a given
                                        // instance. This may be simply correlated to the "list" variable in our
                                        // WordFile class.
-  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
+  
 
   /*
    * PUBLIC METHODS These are the methods you can access in OTHER clases (i.e. our
@@ -49,7 +50,7 @@ public class HangmanGame {
     // was difficult to check)
 
     // Sets value of instance variable wordList2 to the Word File!
-    wordList = new WordFile().getWordArrayList();
+    this.wordList = new WordFile().getWordArrayList();
     this.resetGame();
 
   }
@@ -96,7 +97,7 @@ public class HangmanGame {
 
       System.out.println();
 
-      this.wordSoFar = this.wordToGuess.clone();
+      this.wordSoFar = this.wordToGuess.clone(); // may be a better way to get the length of the wordToGuess
       Arrays.fill(wordSoFar, '_');
       for (int i = 0; i < this.wordSoFar.length; i++) {
         System.out.print(this.wordSoFar[i] + " ");
@@ -115,14 +116,18 @@ public class HangmanGame {
         // here is where you would search for that letter
         // in the char array (method: containsLetters)
 
-        // Then you would need to be able to replace it the underscores
-        // with that letter if user was correct, and leave it if incorrect
+        // Then you would need to be able to replace the underscores in wordToGuess
+        // with that letter guessed by the user if they were correct 
+
+        // if it's incorrect
         // You'd also need to decrement a life if incorrect
         // Use method replaceLetters
 
         // Finally, you'd have a condition to indicate that if 
         // the user guessed all the letters, and they had more than 0 lives
         // they win!
+
+        
 
 
         // For development:
