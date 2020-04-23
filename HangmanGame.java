@@ -1,10 +1,9 @@
-
-/**
+/*
  * A program to play a game of Hangman.
  * @author Jared Collier, Allison Roldan
  * @version 0.1
  */
-
+package hangmangame;
 import java.util.*;
 
 public class HangmanGame {
@@ -23,7 +22,6 @@ public class HangmanGame {
                               // the randomly selected word
   private char[] wordSoFar; // The word so far as it is updated by correct user guesses
   private Random rand = new Random();
-  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
 
   // Variables that Jared is NOT certain should be instance variables
   private char[] lettersGuessed; // The letters the user has guessed so far, from previous turns
@@ -32,7 +30,7 @@ public class HangmanGame {
   private ArrayList<String> usedWords; // saves a copy of the words that had been used in previous rounds of a given
                                        // instance. This may be simply correlated to the "list" variable in our
                                        // WordFile class.
-  
+  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
 
   /*
    * PUBLIC METHODS These are the methods you can access in OTHER clases (i.e. our
@@ -50,7 +48,7 @@ public class HangmanGame {
     // was difficult to check)
 
     // Sets value of instance variable wordList2 to the Word File!
-    this.wordList = new WordFile().getWordArrayList();
+    wordList = new WordFile().getWordArrayList();
     this.resetGame();
 
   }
@@ -79,9 +77,19 @@ public class HangmanGame {
    */
   public void playGame() {
     // TODO: FILL ME IN!
+    Scanner input = new Scanner(System.in);
+    
+    System.out.println("Welcome to Hangman!");
+    
+    String playerName;
+    System.out.println("Enter Player Name:");// Asking Player for their name 
+    playerName = input.nextLine();
+    
+    System.out.printf("Hello %s!\n", playerName);
+    
     char letterGuessed; // The letter guessed by a user on a given turn
     String charToStringOutput;
-    Scanner input = new Scanner(System.in);
+    
 
     // DEBUG
     // for (int i = 0; i < this.wordList.length; i++) {
@@ -97,7 +105,7 @@ public class HangmanGame {
 
       System.out.println();
 
-      this.wordSoFar = this.wordToGuess.clone(); // may be a better way to get the length of the wordToGuess
+      this.wordSoFar = this.wordToGuess.clone();
       Arrays.fill(wordSoFar, '_');
       for (int i = 0; i < this.wordSoFar.length; i++) {
         System.out.print(this.wordSoFar[i] + " ");
@@ -116,18 +124,14 @@ public class HangmanGame {
         // here is where you would search for that letter
         // in the char array (method: containsLetters)
 
-        // Then you would need to be able to replace the underscores in wordToGuess
-        // with that letter guessed by the user if they were correct 
-
-        // if it's incorrect
+        // Then you would need to be able to replace it the underscores
+        // with that letter if user was correct, and leave it if incorrect
         // You'd also need to decrement a life if incorrect
         // Use method replaceLetters
 
         // Finally, you'd have a condition to indicate that if 
         // the user guessed all the letters, and they had more than 0 lives
         // they win!
-
-        
 
 
         // For development:
@@ -280,10 +284,34 @@ public class HangmanGame {
   private void askForGuess() {
     String charToStringOutput;
     Scanner input = new Scanner(System.in);
-
+    
+    String letterGuess;
     System.out.print("Guess a letter: ");
-    char ch = input.next().charAt(0);
-
+    letterGuess = input.nextLine();
+    if(char ch = input.next().charAt(0))
+    {
+        System.out.println(wordSoFar);
+    }
+    else
+    {
+        System.out.printf("I'm sorry, the word has no '%s'. You have %d lives left.\n", letterGuess, playerLives -= 1);
+    }
+    
+    if(letterGuess == this.charInWord)
+    {
+        System.out.println(wordToGuessUpdated);
+    }
+    else
+    {
+        System.out.printf("I'm sorry, the word has no '%s'. You have %d lives left.\n", letterGuess, playerLives -= 1);
+    }
+    
+    if(letterGuess == this.wordToGuess)
+    {
+        System.out.printf("Congratulations, the word is '%s'!"
+                + " You solved the word with %s lives remaining", this.wordToGuess ,playerLives);
+    }
+   
   }
 
   /**
@@ -298,7 +326,7 @@ public class HangmanGame {
     System.out.println("\nYou won!");
 
     Scanner input = new Scanner(System.in);
-    System.out.println("Would you like to play again? Y/N: ");
+    System.out.printf("Would you like to play again %s? Y/N: \n", playerName);
     yayNay = input.nextLine().charAt(0);
 
     if (yayNay == 'y' || yayNay == 'Y') {
