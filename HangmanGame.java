@@ -1,9 +1,10 @@
-/*
+
+/**
  * A program to play a game of Hangman.
  * @author Jared Collier, Allison Roldan
- * @version 0.1
+ * @version 1.0
  */
-package hangmangame;
+
 import java.util.*;
 
 public class HangmanGame {
@@ -17,20 +18,15 @@ public class HangmanGame {
    */
 
   // General game play (number will vary instance to instance, so not static)
-  private int playerLives = 6; // Max errors before user loses game
-  private char[] wordToGuess; // Word that user needs to guess // converted to char[] by toCharArray() from
-                              // the randomly selected word
+  private int playerLives; // Max errors before user loses game
+  private char[] wordToGuess; // Word that user needs to guess // converted to char[] by toCharArray() from the randomly selected word
   private char[] wordSoFar; // The word so far as it is updated by correct user guesses
-  private Random rand = new Random();
+  private ArrayList<String> wordList; // This is the word list used for the game
+  private Random rand = new Random(); // Random
+  private String incorrectLetters = ""; // List of the already guessed letters
 
-  // Variables that Jared is NOT certain should be instance variables
-  private char[] lettersGuessed; // The letters the user has guessed so far, from previous turns
-  private int lettersLeft; // Counts the underscores left in wordSoFar // if = 0, and playerlives != 0,
-                           // player has won
-  private ArrayList<String> usedWords; // saves a copy of the words that had been used in previous rounds of a given
-                                       // instance. This may be simply correlated to the "list" variable in our
-                                       // WordFile class.
-  private ArrayList<String> wordList; // this is the class instance variable that holds the fetched ArrayList of words
+  // Variables not yet used
+  private ArrayList<String> usedWords;
 
   /*
    * PUBLIC METHODS These are the methods you can access in OTHER clases (i.e. our
@@ -42,14 +38,8 @@ public class HangmanGame {
    * Creates a new HangmanGame object with a default word list.
    */
   public HangmanGame() {
-    // TODO: FILL ME IN!
 
-    // I think this is all you need to do here (but my usb was having issues so it
-    // was difficult to check)
-
-    // Sets value of instance variable wordList2 to the Word File!
-    wordList = new WordFile().getWordArrayList();
-    this.resetGame();
+    this.wordList = new WordFile().getWordArrayList();
 
   }
 
@@ -60,97 +50,62 @@ public class HangmanGame {
    */
   public HangmanGame(ArrayList<String> wordList) {
 
-    rand = new Random();
     this.wordList = wordList;
-
-    // This constructor will provide the list of words for all games played.
-    // It should be used for testing and grading. A smaller word list will make it
-    // easy to see if your program is working
 
   }
 
   /**
    * A method that plays Hangman. This method plays a full game of Hangman. When
    * the game is over (win or lose), the player is prompted to play again, which
-   * restarts the game. The method returns when the player chooses not to play
-   * again.
+   * restarts the game.
    */
   public void playGame() {
-    // TODO: FILL ME IN!
-    Scanner input = new Scanner(System.in);
-    
-    System.out.println("Welcome to Hangman!");
-    
-    String playerName;
-    System.out.println("Enter Player Name:");// Asking Player for their name 
-    playerName = input.nextLine();
-    
-    System.out.printf("Hello %s!\n", playerName);
-    
-    char letterGuessed; // The letter guessed by a user on a given turn
-    String charToStringOutput;
-    
 
-    // DEBUG
-    // for (int i = 0; i < this.wordList.length; i++) {
-    // System.out.println(this.wordList[i].toString());
-    // }
+    System.out.println("\nWelcome to Hangman!");
+
+    char guess; // The letter guessed by a user on a given turn
+    int round = 1; // Round number
+
     do {
-      this.wordToGuess = this.pickWord().toCharArray();
-      System.out.println(this.wordToGuess);
 
-      for (int i = 0; i < this.wordToGuess.length; i++) {
-        System.out.print(this.wordToGuess[i] + " ");
-      }
+      System.out.printf("Round: %d\n", round);
 
-      System.out.println();
-
-      this.wordSoFar = this.wordToGuess.clone();
-      Arrays.fill(wordSoFar, '_');
-      for (int i = 0; i < this.wordSoFar.length; i++) {
-        System.out.print(this.wordSoFar[i] + " ");
-      }
-
-      System.out.println();
-
-      charToStringOutput = this.charToString(this.wordSoFar);
-      System.out.print(charToStringOutput);
+      this.resetGame();
 
       while (this.playerLives > 0) {
-        // In here is where some of the round-to-round logic can go
-        System.out.printf("The word is: %s\n",charToStringOutput);
-        this.askForGuess();
 
-        // here is where you would search for that letter
-        // in the char array (method: containsLetters)
+        if (this.countLetters() == 0 && this.playerLives > 0) {
 
-        // Then you would need to be able to replace it the underscores
-        // with that letter if user was correct, and leave it if incorrect
-        // You'd also need to decrement a life if incorrect
-        // Use method replaceLetters
+          System.out.println("You win!");
+          System.out.println("The word was: " + this.charToString(wordToGuess).replace(" ", ""));
+          round++;
+          break; // jump out of the while-loop since playerLives will be > 0
 
-        // Finally, you'd have a condition to indicate that if 
-        // the user guessed all the letters, and they had more than 0 lives
-        // they win!
+        }
 
+        System.out.printf("The word so far is: %s\n", this.charToString(wordSoFar));
 
-        // For development:
-        System.out.println("Enter 0 to escape: ");
-        int lives = input.nextInt();
-        this.playerLives = lives;
+        guess = this.askForGuess(); // there was an issue here when I closed Scanner
+
+        // Checks to see if the guess was already guessed
+        if (this.containsLetters(guess) == false || String.copyValueOf(wordToGuess).indexOf(guess) != -1) {
+          this.incorrectLetters = this.incorrectLetters + guess;
+        } // could make into separate method?
+
+        this.replaceLetters(guess); // Replaces the letter if containsLetter is true
+
+      }
+
+      if (this.playerLives == 0 && this.countLetters() > 0) {
+
+        System.out.println("You're completely hung.");
+        System.out.println("The word was: " + this.charToString(wordToGuess).replace(" ", ""));
+        System.out.println("You lose.");
+        round++;
 
       }
 
     } while (this.askToPlayAgain() == true);
-
-    // This prints the array list from the words coming out of the file
-    // for (int i = 0; i < this.wordList2.size(); i++) {
-    // System.out.println(this.wordList2.get(i).toString());
-    // }
-
-    // See pseudocode for description of algorithm here
-    // do not call the method playGame() again from inside itself
-
 
   }
 
@@ -165,28 +120,18 @@ public class HangmanGame {
    * to assist in this.
    */
   private void resetGame() {
-    // TODO
 
-    int wordFileArraySize; // Variable that keeps track of the size of the array (array.length - 1) // may
-                           // need to set up a getter for this
-    Random rand = new Random(); // generates random whole number in the range of the size of the wordFile array
-                                // to grab an index
-    int randomIndex; // Randomly generated number in the range of the word list array length
-    String wordSelected; // Word selected from WordFile
-
-    /*
-     * Assigns new game values to the instance variables: Randomly select an index
-     * from the WordFile list and the word at that index becomes wordToGuess by a
-     * wordSelected.toCharArray() method wordSoFar variable is filled with
-     * underscores '_', something like Arrays.fill() method playerLives is reset to
-     * 6 lettersLeft is set to the count of underscores for the new word
-     * lettersGuessed[] is emptied
-     */
+    this.playerLives = 8;
+    this.incorrectLetters = "";
+    this.wordToGuess = this.pickWord().toCharArray();
+    this.wordSoFar = new char[this.wordToGuess.length]; // Initialize wordSoFar to have same length as wordToGuess
+    Arrays.fill(wordSoFar, '_'); // Fill wordSoFar with underscores
 
   }
 
   /**
-   * This method generates a random word selected from the given array/arraylist
+   * This method generates a random word selected from the given array/arralist
+   * @return pickedWord
    */
   private String pickWord() {
 
@@ -205,12 +150,10 @@ public class HangmanGame {
    * @return wordSoFarOutput
    */
   private String charToString(char[] word) {
-    // TODO
-
+    
     String wordSoFarOutput; // variable that is returned to PlayGame() indicating the wordSoFar
 
     wordSoFarOutput = new String(word).replace("", " ").trim();
-    //wordSoFarOutput.replace(".(?=.)", "$0 ").trim();
 
     return wordSoFarOutput;
 
@@ -222,20 +165,19 @@ public class HangmanGame {
    * 
    * @param word
    * @return charInWord
-   * 
    */
-  private boolean containsLetters(char[] word) {
+  private boolean containsLetters(char letter) {
 
-    boolean charInWord = false;
+    boolean contains = false;
 
-    /*
-     * Uses a for loop to go through each char of the wordToGuess char[] and see if
-     * letterGuesed character equals any of them. Uses a linear search method. There
-     * may be multiple instances the letter occurs. More an issue for the method
-     * below.
-     */
+    for (char c : this.wordToGuess) {
+      if (c == letter) {
+        contains = true;
+        break;
+      } 
+    }
 
-    return charInWord;
+    return contains;
 
   }
 
@@ -246,20 +188,69 @@ public class HangmanGame {
    * @param word
    * @return
    */
-  private char[] replaceLetters(char[] word) {
+  private char[] replaceLetters(char letter) { // Seems like this method could be broken out into a true "replace letters" method along with a user prompt method
 
-    char[] wordSoFarUpdated;
+    if (this.containsLetters(letter) == true) {
 
-    /*
-     * When user correctly finds a letter, this method considers both wordToGuess
-     * and wordSoFar. Replace each underscore '_' in wordSoFar with guessed letter
-     * only if the letter in wordToGuess at the index of the '_' is the one you're
-     * trying to replace. In other words, you'll need to consider whether there is
-     * an '_' in wordSoFar to replace and if the '_' in wordToGuess is the one that
-     * should be replaced.
-     */
+      System.out.println("Your guess is correct!");
 
-    return wordSoFarUpdated;
+      for (int i = 0; i < this.wordSoFar.length; i++) {
+        if (this.wordToGuess[i] == letter) {
+          this.wordSoFar[i] = letter;
+        }
+      }
+
+    } else {
+      this.playerLives--;
+      System.out.printf("Sorry, the word has no '%s'. You have %d lives left.\n", letter, this.playerLives);
+    }
+
+    return this.wordSoFar;
+
+  }
+
+  /**
+   * This method asks the player to guess again
+   * 
+   * @return letterGuessed
+   */
+  private char askForGuess() {
+
+    String letterGuessed;
+    
+    System.out.print("Guess a letter: ");
+    letterGuessed = this.reader();
+
+    while (true) {
+      if (letterGuessed.length() > 1) {
+        System.out.print("You can only guess one letter at a time. Try again: ");
+        letterGuessed = this.reader();
+      } else if (letterGuessed.length() == 1 && this.incorrectLetters.contains(letterGuessed)) {
+        System.out.print("You already guessed that letter. Try again: ");
+        letterGuessed = this.reader();
+      } else if (letterGuessed.length() == 1) {
+        break;
+      } 
+    }
+    
+    return letterGuessed.charAt(0);
+
+  }
+
+
+  /**
+   * This method reads in the user input
+   * 
+   * @return letterGuessed
+   */
+  private String reader() {
+
+    Scanner in = new Scanner(System.in);
+    String letterGuessed;
+
+    letterGuessed = in.nextLine();
+
+    return letterGuessed;
 
   }
 
@@ -270,63 +261,33 @@ public class HangmanGame {
    * @param word
    * @return lettersLeft
    */
-  private int countLetters(char[] word) {
+  private int countLetters() {
 
-    int lettersLeft;
+    int underscores = 0;
 
-    return lettersLeft;
+    for (int i = 0; i < this.wordSoFar.length; i++) {
+      if (this.wordSoFar[i] == '_') {
+        underscores++;
+      }
+    }
 
-  }
+    return underscores;
 
-  /**
-   * This method asks the player to guess again
-   */
-  private void askForGuess() {
-    String charToStringOutput;
-    Scanner input = new Scanner(System.in);
-    
-    String letterGuess;
-    System.out.print("Guess a letter: ");
-    letterGuess = input.nextLine();
-    if(char ch = input.next().charAt(0))
-    {
-        System.out.println(wordSoFar);
-    }
-    else
-    {
-        System.out.printf("I'm sorry, the word has no '%s'. You have %d lives left.\n", letterGuess, playerLives -= 1);
-    }
-    
-    if(letterGuess == this.charInWord)
-    {
-        System.out.println(wordToGuessUpdated);
-    }
-    else
-    {
-        System.out.printf("I'm sorry, the word has no '%s'. You have %d lives left.\n", letterGuess, playerLives -= 1);
-    }
-    
-    if(letterGuess == this.wordToGuess)
-    {
-        System.out.printf("Congratulations, the word is '%s'!"
-                + " You solved the word with %s lives remaining", this.wordToGuess ,playerLives);
-    }
-   
   }
 
   /**
    * This method displays a "you won" message and asks the player if they would
    * like to play again
+   * 
+   * @return playAgain
    */
   private boolean askToPlayAgain() {
 
     boolean playAgain = true;
     char yayNay;
 
-    System.out.println("\nYou won!");
-
     Scanner input = new Scanner(System.in);
-    System.out.printf("Would you like to play again %s? Y/N: \n", playerName);
+    System.out.print("Would you like to play again? Y/N: ");
     yayNay = input.nextLine().charAt(0);
 
     if (yayNay == 'y' || yayNay == 'Y') {
@@ -334,8 +295,9 @@ public class HangmanGame {
     } else {
       playAgain = false;
     }
-
+    
     return playAgain;
+
   }
 
 } // HangmanGame
