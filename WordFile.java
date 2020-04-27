@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 /**
  * A wrapper class for dealing with text files of words
  * 
- * @author Jared Collier, Allson Roldan
  * @version 2020
  */
 public class WordFile {
